@@ -1,0 +1,38 @@
+class Solution {
+public:
+    bool isNumber(string s) {
+        int i = 0, n = s.size();
+
+        // 1. Trim leading spaces
+        while (i < n && s[i] == ' ') i++;
+
+        // 2. Handle sign
+        if (i < n && (s[i] == '+' || s[i] == '-')) i++;
+
+        bool isNumeric = false, hasDot = false, hasExp = false;
+
+        while (i < n) {
+            if (isdigit(s[i])) {
+                isNumeric = true;
+                i++;
+            } else if (s[i] == '.') {
+                if (hasDot || hasExp) return false; // dot only once and before exponent
+                hasDot = true;
+                i++;
+            } else if (s[i] == 'e' || s[i] == 'E') {
+                if (hasExp || !isNumeric) return false; // exponent only once, must follow number
+                hasExp = true;
+                isNumeric = false; // reset: must have number after 'e'
+                i++;
+                if (i < n && (s[i] == '+' || s[i] == '-')) i++; // sign after 'e'
+            } else if (s[i] == ' ') {
+                // skip trailing spaces
+                while (i < n && s[i] == ' ') i++;
+                return i == n && isNumeric;
+            } else {
+                return false; // invalid character
+            }
+        }
+        return isNumeric;
+    }
+};
