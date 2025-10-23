@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> result;
+        if (root == nullptr) return result;
+        dfs(root, "", result);
+        return result;
+    }
+
+private:
+    void dfs(TreeNode* node, string path, vector<string>& result) {
+        if (node == nullptr) return;
+
+        // Build current path
+        if (!path.empty()) 
+            path += "->";
+        path += to_string(node->val);
+
+        // If it's a leaf node, add path to result
+        if (node->left == nullptr && node->right == nullptr) {
+            result.push_back(path);
+            return;
+        }
+
+        // Continue DFS
+        dfs(node->left, path, result);
+        dfs(node->right, path, result);
+    }
+};
